@@ -36,3 +36,9 @@ separadas no relatório para não atribuir ao autor coisa que ele não escreveu.
 
 Ler → explicar em voz alta sem olhar → escrever a nota → ser arguido. O que não
 sobreviver à arguição volta para a leitura.
+
+## Fontes
+
+- MAZIERO, Carlos A. *Sistemas Operacionais: Conceitos e Mecanismos*. UFPR.
+  <https://wiki.inf.ufpr.br/maziero/doku.php?id=socm:start>
+- `man 2 syscall` — ABI x86-64/Linux.

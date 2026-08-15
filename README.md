@@ -1,44 +1,155 @@
-# Arquitetura de Software — Trabalho de SO, Processos, Threads e Assembly
+# Exercício: Sistemas Operacionais, Processos, Threads e Assembly
 
-Repositório de estudo e produção do trabalho. O enunciado do professor está
-transcrito em [`enunciado.md`](enunciado.md).
+- **Público-alvo:** alunos de Arquitetura de Software
+- **Modalidade:** grupos de 2 a 4 alunos
+- **Carga horária:** 3 horas
+- **Entrega:** relatório técnico curto
 
-## Divisão do grupo
+## Objetivos
 
-| Parte  | Tema                                   | Responsável   |
-| ------ | -------------------------------------- | ------------- |
-| 1      | Tipos de sistemas operacionais         | Luiz Henrique |
-| 2      | Chamadas de sistema                    | Celso         |
-| 3a     | Processos vs. threads (tabela)         | Kauan Leal    |
-| 3b     | Concorrência (race condition, mutex)   | Matheus       |
-| 4      | Do código C ao Assembly                | Celso         |
-| —      | sem tema definido                      | Matheus Roxo  |
+- Conhecer diferentes tipos de sistemas operacionais.
+- Compreender chamadas de sistema (system calls).
+- Diferenciar processos e threads.
+- Observar como um código em C é transformado em instruções Assembly.
 
-Modelo de trabalho: cada um domina seu tema e **ensina para o resto do time** depois.
+## Parte 1 — Tipos de sistemas operacionais
 
-## Pendências abertas
+Pesquise pelo menos quatro tipos de sistemas operacionais, escolhendo entre:
 
-- [ ] **Tamanho do grupo.** O enunciado pede grupos de 2 a 4 alunos; somos 5.
-      Confirmar com o professor antes da entrega.
-- [ ] **Tema do Matheus Roxo.** Candidato natural: assumir a Parte 2 junto com o Celso,
-      ou ficar responsável pela seção "Fontes consultadas" + revisão/formatação final.
-- [ ] **Seção "Fontes consultadas"** é obrigatória no produto final e não tem dono.
-- [ ] **Arquitetura dos experimentos.** Decidir entre:
-      - container `linux/amd64` (alinha com `rax`/`rdi`, dá acesso a `strace` e ao `gcc` real);
-      - ARM64 / macOS / Apple clang nativo (permitido pelo enunciado, desde que registrado,
-        mas usa `x0`–`x8` e `svc #0`, e não tem `strace`).
+- Sistemas em lote (batch).
+- Sistemas de tempo compartilhado.
+- Sistemas Monolíticos.
+- Sistemas Microkernel.
 
-## Estrutura
+Para cada tipo, apresente:
+
+- Uma definição.
+- Duas características.
+- Um exemplo de aplicação.
+- Um sistema operacional relacionado.
+
+Organize os resultados em uma tabela comparativa.
+
+## Parte 2 — Chamadas de sistema
+
+Explique o que é uma chamada de sistema e por que os programas precisam delas para
+acessar recursos controlados pelo sistema operacional.
+
+Escolha e pesquise quatro chamadas de sistema, sendo uma de cada categoria:
+
+| Categoria                  | Exemplos                    |
+| -------------------------- | --------------------------- |
+| Arquivos                   | open, read, write, close    |
+| Processos                  | fork, execve, wait, exit    |
+| Memória                    | mmap, brk                   |
+| Comunicação ou informações | pipe, socket, getpid, uname |
+
+Para cada chamada selecionada, informe:
+
+- Sua finalidade.
+- O que ela recebe como entrada.
+- O que retorna.
+- Um exemplo de utilização.
+
+Explique também a diferença entre uma chamada de sistema e uma função de biblioteca.
+Por exemplo, `printf()` é uma função da biblioteca C que pode utilizar internamente a
+chamada de sistema `write()`.
+
+## Parte 3 — Processos e threads
+
+Produza uma comparação entre processos e threads considerando:
+
+- Memória.
+- Custo de criação.
+- Compartilhamento de dados.
+- Comunicação.
+- Isolamento de falhas.
+- Sincronização.
+
+Depois, responda:
+
+- Quando é mais adequado utilizar um processo?
+- Quando é mais adequado utilizar uma thread?
+- O que é uma condição de corrida?
+- Para que serve um mutex?
+
+Apresente um exemplo de software que utilize múltiplos processos ou múltiplas threads.
+
+## Parte 4 — Do código C ao Assembly
+
+O grupo deverá escolher ou criar um pequeno, de 10 linhas no máximo em C. O código pode
+conter, por exemplo:
+
+- Uma operação matemática.
+- Uma estrutura condicional.
+- Um laço de repetição.
+- Uma função.
+- Uma operação sobre um vetor.
+- Uma combinação desses elementos.
+
+O programa deve ter aproximadamente 5 a 20 linhas, desconsiderando comentários e linhas
+em branco.
+
+### Compilação
+
+Salve o programa em um arquivo, por exemplo, `programa.c`.
+
+Gere o código Assembly sem otimização:
 
 ```
-notas/          anotações de estudo (leitura do Maziero + man pages)
-experimentos/   código e saídas reais (strace, .s gerados)
-relatorio/      texto que vai para a entrega
+gcc -O0 -S programa.c -o programa_O0.s
 ```
 
-## Material de apoio
+Gere também uma versão com otimização:
 
-- MAZIERO, Carlos A. *Sistemas Operacionais: Conceitos e Mecanismos*. UFPR.
-  <https://wiki.inf.ufpr.br/maziero/doku.php?id=socm:start>
-  (referenciar por **nome de capítulo**, não por página — a numeração muda entre versões do PDF)
-- `man 2 syscall` — para os detalhes de ABI x86-64/Linux, que **não** estão no Maziero.
+```
+gcc -O2 -S programa.c -o programa_O2.s
+```
+
+Em computadores com arquitetura x86-64, é possível solicitar a sintaxe Intel:
+
+```
+gcc -O0 -S -masm=intel programa.c -o programa_O0.s
+```
+
+O grupo também poderá utilizar outro compilador, ou outra arquitetura de processador,
+desde que registre essas informações no relatório.
+
+### Análise
+
+Selecione de três a oito instruções Assembly produzidas pelo compilador e explique:
+
+- Qual parte do código C está relacionada a essas instruções.
+- O que cada instrução realiza.
+- Quais registradores aparecem no trecho.
+- Se existem diferenças entre as versões `-O0` e `-O2`.
+- Qual foi a arquitetura, o sistema operacional e o compilador utilizados.
+
+Não é necessário explicar todo o arquivo Assembly. O objetivo é identificar uma relação
+clara entre um pequeno trecho do código C e as instruções geradas.
+
+O Assembly pode variar conforme o processador, o sistema operacional, o compilador e o
+nível de otimização.
+
+## Organização sugerida das 3 horas
+
+| Tempo      | Atividade                                    |
+| ---------- | -------------------------------------------- |
+| 45 minutos | Pesquisa sobre tipos de sistemas operacionais |
+| 40 minutos | Pesquisa sobre chamadas de sistema            |
+| 35 minutos | Comparação entre processos e threads          |
+| 45 minutos | Compilação e análise do código C em Assembly  |
+| 15 minutos | Organização e revisão da entrega              |
+
+## Produto final
+
+Entregar um relatório de 3 a 5 páginas contendo:
+
+1. Tabela dos tipos de sistemas operacionais.
+2. Explicação das quatro chamadas de sistema.
+3. Comparação entre processos e threads.
+4. Código C escolhido pelo grupo.
+5. Trecho do Assembly gerado.
+6. Explicação das instruções selecionadas.
+7. Comparação entre as versões com e sem otimização.
+8. Fontes consultadas.
