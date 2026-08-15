@@ -40,5 +40,6 @@ sobreviver à arguição volta para a leitura.
 ## Fontes
 
 - MAZIERO, Carlos A. *Sistemas Operacionais: Conceitos e Mecanismos*. UFPR.
+  PDF no repo: [`material-de-apoio/`](../material-de-apoio/) · original:
   <https://wiki.inf.ufpr.br/maziero/doku.php?id=socm:start>
 - `man 2 syscall` — ABI x86-64/Linux.
